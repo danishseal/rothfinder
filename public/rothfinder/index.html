@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <script>
+      // The original Nuxt router expects to boot at `/`. Keep the mirrored file
+      // nested while presenting that route to its client-side history.
+      window.history.replaceState(window.history.state, "", "/");
+
+      // Keep CMS-driven images and the Rive runtime local. The page data itself
+      // stays live, while every media URL returned in that data is remapped.
+      const nativeFetch = window.fetch.bind(window);
+      const localizeCmsAssets = (value) => {
+        if (typeof value === "string") {
+          return value.replace(
+            /https:\/\/www\.datocms-assets\.com\/217501\/([^?\s,]+)(?:\?[^\s,]+)?/g,
+            "/media/$1",
+          );
+        }
+        if (Array.isArray(value)) return value.map(localizeCmsAssets);
+        if (value && typeof value === "object") {
+          return Object.fromEntries(
+            Object.entries(value).map(([key, child]) => [key, localizeCmsAssets(child)]),
+          );
+        }
+        return value;
+      };
+
+      window.fetch = async (input, init) => {
+        const url = typeof input === "string" ? input : input.url;
+        if (url.includes("unpkg.com/@rive-app/canvas") && url.endsWith("/rive.wasm")) {
+          return nativeFetch("/rive/rive.wasm", init);
+        }
+        if (url.includes("cdn.jsdelivr.net/npm/@rive-app/canvas") && url.endsWith("/rive_fallback.wasm")) {
+          return nativeFetch("/rive/rive_fallback.wasm", init);
+        }
+
+        const response = await nativeFetch(input, init);
+        if (url === "https://graphql.datocms.com/" && response.ok) {
+          const headers = new Headers(response.headers);
+          headers.delete("content-encoding");
+          headers.delete("content-length");
+          return new Response(JSON.stringify(localizeCmsAssets(await response.json())), {
+            status: response.status,
+            statusText: response.statusText,
+            headers,
+          });
+        }
+        return response;
+      };
+    </script>
+    <link rel="stylesheet" href="/_nuxt/entry.CTY_jCXG.css" crossorigin />
+    <link rel="modulepreload" as="script" href="/_nuxt/BarqSwx_.js" crossorigin />
+    <script type="module" src="/_nuxt/BarqSwx_.js" crossorigin></script>
+  </head>
+  <body>
+    <div id="__nuxt"></div>
+    <div id="teleports"></div>
+    <script>
+      window.__NUXT__ = {};
+      window.__NUXT__.config = {
+        public: {
+          datoCmsToken: "9f25ce3ec835b99c2102bf7afcf948",
+          datoCmsBaseEditingUrl: "",
+          BASE_URL: "",
+          NUXT_ENV: "",
+          STAGING_MODE: "",
+          "nuxt-scripts": {
+            version: "",
+            prefix: "/_scripts",
+            defaultScriptOptions: { trigger: "onNuxtReady" },
+            googleStaticMapsProxy: "",
+            endpoints: {},
+          },
+        },
+        app: {
+          baseURL: "/",
+          buildId: "80261d40-4b52-4e8f-929b-235152052cca",
+          buildAssetsDir: "/_nuxt/",
+          cdnURL: "",
+        },
+      };
+    </script>
+    <script type="application/json" data-nuxt-data="nuxt-app" data-ssr="false" id="__NUXT_DATA__">
+      [{"prerenderedAt":1,"serverRendered":2},1786988528917,false]
+    </script>
+  </body>
+</html>

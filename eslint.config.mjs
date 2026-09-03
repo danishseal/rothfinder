@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Third-party production bundles mirrored from rothfinder.com.
+    "public/_nuxt/**",
+    "public/rothfinder/_nuxt/**",
   ]),
 ]);
 
