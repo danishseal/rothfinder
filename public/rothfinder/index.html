@@ -27,6 +27,18 @@
         return value;
       };
 
+      const customizePageContent = (payload) => {
+        const content = payload?.data?.home?.flexibleContent;
+        if (Array.isArray(content?.modules)) {
+          // Remove the feature demos/testimonials and the footer subscription banner.
+          // Filtering before rendering also removes generated menu entries.
+          content.modules = content.modules.filter(
+            (module) => !["ProductRecord", "CalloutRecord"].includes(module.__typename),
+          );
+        }
+        return payload;
+      };
+
       window.fetch = async (input, init) => {
         const url = typeof input === "string" ? input : input.url;
         if (url.includes("unpkg.com/@rive-app/canvas") && url.endsWith("/rive.wasm")) {
@@ -41,7 +53,7 @@
           const headers = new Headers(response.headers);
           headers.delete("content-encoding");
           headers.delete("content-length");
-          return new Response(JSON.stringify(localizeCmsAssets(await response.json())), {
+          return new Response(JSON.stringify(customizePageContent(localizeCmsAssets(await response.json()))), {
             status: response.status,
             statusText: response.statusText,
             headers,
