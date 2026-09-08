@@ -30,10 +30,10 @@
       const customizePageContent = (payload) => {
         const content = payload?.data?.home?.flexibleContent;
         if (Array.isArray(content?.modules)) {
-          // Remove the feature demos/testimonials and the footer subscription banner.
+          // Remove the demos, Angie Q&A, transformation cards, and subscription banner.
           // Filtering before rendering also removes generated menu entries.
           content.modules = content.modules.filter(
-            (module) => !["ProductRecord", "CalloutRecord"].includes(module.__typename),
+            (module) => !["ProductRecord", "CalloutRecord", "AngieRecord", "TransformationRecord"].includes(module.__typename),
           );
         }
         return payload;
