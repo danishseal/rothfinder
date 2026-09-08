@@ -1,0 +1,52 @@
+{
+  "data": {
+    "site": {
+      "favicon": []
+    },
+    "global": {
+      "loginBtns": [],
+      "companyDescription": "rothhoood is the strategy and closing system built for advisors who want to uncover opportunities faster, explain them clearly, and convert more clients.",
+      "tagline": "AI POWERED ADVISOR<br>GROWTH PLATFORM"
+    },
+    "footer": {
+      "header": {},
+      "about": "rothhoood is the strategy and closing system built for advisors who want to uncover opportunities faster, explain them clearly, and convert more clients.",
+      "contactInfo": "",
+      "badges": [],
+      "socialMedia": [],
+      "copyright": "rothhoood",
+      "cta": []
+    },
+    "allLegals": [],
+    "home": {
+      "seo": [
+        {
+          "tag": "title",
+          "content": "rothhoood",
+          "attributes": {}
+        }
+      ],
+      "headline": "Close more Roth conversion cases by making the math impossible to ignore.",
+      "intro": "rothhoood is the strategy and closing system built for advisors who want to uncover opportunities faster, explain them clearly, and convert more clients.",
+      "cta": [
+        {
+          "__typename": "ButtonRecord",
+          "label": "Learn More",
+          "external": "#overview",
+          "email": null,
+          "buttonStyle": "text"
+        }
+      ],
+      "flexibleContent": {
+        "modules": [
+          {
+            "__typename": "IntroRecord",
+            "moduleLabel": "Overview",
+            "headline": "turns complex Roth conversion strategies into clear, visual stories that help advisors close cases and help clients make better long-term tax decisions.",
+            "cta": []
+          }
+        ]
+      }
+    }
+  }
+}

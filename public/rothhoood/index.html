@@ -48,18 +48,30 @@
           return nativeFetch("/rive/rive_fallback.wasm", init);
         }
 
-        const response = await nativeFetch(input, init);
-        if (url === "https://graphql.datocms.com/" && response.ok) {
-          const headers = new Headers(response.headers);
-          headers.delete("content-encoding");
-          headers.delete("content-length");
-          return new Response(JSON.stringify(customizePageContent(localizeCmsAssets(await response.json()))), {
-            status: response.status,
-            statusText: response.statusText,
-            headers,
+        if (url === "https://graphql.datocms.com/" || url === "https://graphql.datocms.com") {
+          const body = init?.body ?? (input instanceof Request ? await input.clone().text() : "");
+          const cacheKey = "rothhoood:cms:" + body;
+          let payload;
+          try {
+            const response = await nativeFetch(input, init);
+            payload = await response.json();
+            if (!response.ok || !payload?.data || Array.isArray(payload.data) || payload.errors) {
+              throw new Error("CMS content unavailable");
+            }
+            try { localStorage.setItem(cacheKey, JSON.stringify(payload)); } catch {}
+          } catch (error) {
+            try { payload = JSON.parse(localStorage.getItem(cacheKey)); } catch {}
+            if (!payload?.data || Array.isArray(payload.data)) {
+              payload = await nativeFetch("/rothhoood/recovery.json").then(response => response.json());
+            }
+            console.warn("CMS unavailable; using saved or recovery content.", error);
+          }
+          return new Response(JSON.stringify(customizePageContent(localizeCmsAssets(payload))), {
+            status: 200,
+            headers: { "content-type": "application/json" },
           });
         }
-        return response;
+        return nativeFetch(input, init);
       };
     </script>
     <link rel="stylesheet" href="/_nuxt/entry.CTY_jCXG.css" crossorigin />
