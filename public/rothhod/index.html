@@ -16,7 +16,7 @@
           return value.replace(
             /https:\/\/www\.datocms-assets\.com\/217501\/([^?\s,]+)(?:\?[^\s,]+)?/g,
             "/media/$1",
-          );
+          ).replace(/rothfinder-share/gi, "rothhod-share");
         }
         if (Array.isArray(value)) return value.map(localizeCmsAssets);
         if (value && typeof value === "object") {
